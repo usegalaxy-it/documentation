@@ -14,6 +14,7 @@ python3 -m venv master_env/
 pip install wheel ansible-core==2.11.3
 ```
 ##### download roles and collections needed
+
 ``` bash
 git clone https://github.com/pmandreoli/infrastructure-playbook.git
 git checkout dev_it
@@ -50,7 +51,10 @@ Nmap done: 1 IP address (1 host up) scanned in 0.33 seconds
            Raw packets sent: 1 (44B) | Rcvd: 2 (88B)
 ```
 > RabbitMQ
-
+```bash
+ansible-playbook --private-key ~/.ssh/laniakea-robot.key -i hosts rabbitmq.yml
+```
+check if created certificate are visible and mounted on the rabbitmq container to debug ssl connection check https://www.rabbitmq.com/troubleshooting-ssl.html
 
 > Galaxy
 
