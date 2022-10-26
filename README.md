@@ -31,11 +31,37 @@ ansible-galaxy install -r requirements.yaml # install required collections and r
 - `collection` Ansible galaxy connection needed
 
 #### services to configure
+1. NFS
+2. Postgresql
+3. Rabbitmq
+4. Galaxy
+5. Nginx
+##### NFS
+to run proper job on the htcondor cluster the galaxy machine and condor workers has to share 2 main dir on NFS: 
+- /data/share
+- /opt/galaxy 
 
-1. Postgresql
-2. Rabbitmq
-3. Galaxy
-4. Nginx
+** df -h result on the galaxy VM ** 
+``` bash
+Filesystem                 Size  Used Avail Use% Mounted on
+devtmpfs                   3.9G     0  3.9G   0% /dev
+tmpfs                      3.9G     0  3.9G   0% /dev/shm
+tmpfs                      3.9G  656K  3.9G   1% /run
+tmpfs                      3.9G     0  3.9G   0% /sys/fs/cgroup
+/dev/vda2                   20G   15G  5.8G  72% /
+172.30.16.133:/data/share  200G  2.7G  198G   2% /data/share
+tmpfs                      783M     0  783M   0% /run/user/1000
+172.30.16.133:/opt/galaxy   20G   13G  7.4G  64% /opt/galaxy
+```
+after the creation of the NFS you can mount it by using the `mount.yml` playbook
+
+the configuration of the nfs, in order to allow to galaxy user and condor to write on that, is:
+- /etc/exports
+
+```bash
+/data/share *(rw,sync,no_root_squash)
+/opt/galaxy *(rw,sync,no_root_squash)
+```
 
 ##### Postgresql
 ``` bash 
@@ -122,6 +148,9 @@ sudo rabbitmqctl authenticate_user <username> <password>
 ```
 
 ##### Galaxy
+for `python_macros` and `python-devel-2.7.5-80.el7_6.x86_64` conflicts:
+`yum --enablerepo=cr update`
+
 ```bash
 ansible-playbook --private-key <key> -i hosts sn06.yml --extra-vars "__galaxy_dir_perms='0755'"
 ```
