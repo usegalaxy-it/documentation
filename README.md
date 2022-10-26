@@ -191,3 +191,40 @@ check the galaxy unit
 journalctl -fu galaxy-zergling*
 ```
 ---
+###### Galaxy Managing storage 
+
+the storage is defined and managed by the file
+
+`/opt/galaxy/config/object_store_conf.xml` 
+this file is used to manage different object storages
+``` xml 
+<?xml version="1.0"?>
+<object_store type="distributed" id="primary" order="0">
+    <backends>
+        <backend id="files11" type="disk" weight="1" store_by="uuid">
+        <!-- galaxy-it  <files_dir path="/data/dnb05/galaxy_db/files"/>-->
+        <files_dir path="/data/share/galaxy_db/files"/>
+            <extra_dir type="temp" path="/data/share/jwd/tmp"/>
+            <extra_dir type="job_work" path="/data/share/jwd/main"/>
+        </backend>
+        <backend id="secondary" type="disk" weight="0" store_by="id">
+            <files_dir path="/data/0/galaxy_db/files"/>
+            <extra_dir type="temp" path="/data/2/galaxy_db/tmp"/>
+            <extra_dir type="job_work" path="/data/share/jwd/main"/>
+        </backend>
+    </backends>
+</object_store> 
+```
+the tag `weight` determines where Galaxy write more is high more high is the priority
+
+###### Sorting hat 
+[source-code](https://github.com/usegalaxy-eu/sorting-hat)
+
+location in galaxy at `/opt/galaxy/dynamic_rules/usegalaxy` 
+
+- `destination_specifications.yaml` -> definition of jobs destinations both local that on pulsar
+- `joint_destinations.yaml` -> specific pulsar 
+- `sorting_hat.py` -> sorting hat executable 
+- `sorting_hat.yaml` -> specific configuration sorting hat
+- `tool_destinations.yaml` -> tools requirements es: core, ram, gpus
+
