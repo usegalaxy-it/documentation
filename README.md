@@ -1,9 +1,17 @@
 # Private Documentation Usegalaxy Deployment
-## Infrastructure creation
+## Infrastructure creation using Terraform
+- [install terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli#install-terraform)
+- clone the [infrastructure repository](https://github.com/pmandreoli/infrastructure)
+- source the openstack v2 auth file
+- create the infrastructure using `terraform init`, `terraform plan -o galaxy`, `terraform apply galaxy`
+- the command `terraform output` gives in output all the ip of the newly created virtual machines, that can be used to populate the Ansible inventory file in the next configuration step 
 
-## Ansible
+## Configuration using Ansible
+
 ### Ansible installation
+
 Ansible by installing [ansible-core](https://docs.ansible.com/core.html) + needed [collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) in order to have a more stable system
+
 #### Install ansible core on ubuntu 20.04 
 
 ``` bash
@@ -13,7 +21,7 @@ python3 -m venv master_env/
 . master_env/bin/activate
 pip install wheel ansible-core==2.11.3
 ```
-##### download roles and collections needed
+##### Download roles and collections needed
 
 ``` bash
 git clone https://github.com/pmandreoli/infrastructure-playbook.git
@@ -21,7 +29,9 @@ git checkout dev_it
 ansible-galaxy install -r requirements.yaml # install required collections and roles
 ```
 ### Infrastructure-playbook
+
 #### configuration
+
 - `hosts` inventory file containing each infrastructure element created using Terraform 
 - `yml files` playbook to configure the services
 - `group_vars` directory containing for each service a .yml file with variables 
@@ -31,17 +41,19 @@ ansible-galaxy install -r requirements.yaml # install required collections and r
 - `collection` Ansible galaxy connection needed
 
 #### services to configure
+
 1. NFS
 2. Postgresql
 3. Rabbitmq
 4. Galaxy
 5. Nginx
+
 ##### NFS
 to run proper job on the htcondor cluster the galaxy machine and condor workers has to share 2 main dir on NFS: 
 - /data/share
 - /opt/galaxy 
 
-** df -h result on the galaxy VM ** 
+**df -h result on the galaxy VM** 
 ``` bash
 Filesystem                 Size  Used Avail Use% Mounted on
 devtmpfs                   3.9G     0  3.9G   0% /dev
@@ -56,6 +68,7 @@ tmpfs                      783M     0  783M   0% /run/user/1000
 after the creation of the NFS you can mount it by using the `mount.yml` playbook
 
 the configuration of the nfs, in order to allow to galaxy user and condor to write on that, is:
+
 - /etc/exports
 
 ```bash
@@ -131,7 +144,9 @@ _galaxy_db_port: <db_port>
 galaxy_db_connection: "postgresql://{{ _galaxy_db_user }}:{{ _galaxy_db_pass }}@{{ _galaxy_db_host }}/{{ _galaxy_db_name }}"
 postgres_pass: "{{ _galaxy_db_pass }}"
 ```
+
 ##### RabbitMQ
+
 ```bash
 ansible-playbook --private-key ~/.ssh/laniakea-robot.key -i hosts rabbitmq.yml
 ```
@@ -154,9 +169,10 @@ for `python_macros` and `python-devel-2.7.5-80.el7_6.x86_64` conflicts:
 ```bash
 ansible-playbook --private-key <key> -i hosts sn06.yml --extra-vars "__galaxy_dir_perms='0755'"
 ```
-secret_group_vars the playbook includes both the db_main.yml and the all.yml:
-`all.yml` 
-``` ansible
+secret\_group\_vars the playbook includes both the `db_main.yml` and the `all.yml`:
+
+- `all.yml` 
+```ansible
 ---
 galaxysession_cookie: test1
 vault_sign_pass_secret: <random>
@@ -181,22 +197,27 @@ id_secret: "<random>"
 certbot_admin_email: "<email>"
 gapars_nginx_config: ""
 ```
+
 > :warning: **The installation do not set the nginx upload module, the nginx configuration has been modified**
 
 --- 
+
 **GALAXY troubleshooting**
+
 using `journalctl`
 check the galaxy unit 
 ``` bash 
 journalctl -fu galaxy-zergling*
 ```
 ---
+
 ###### Galaxy Managing storage 
 
 the storage is defined and managed by the file
 
 `/opt/galaxy/config/object_store_conf.xml` 
 this file is used to manage different object storages
+
 ``` xml 
 <?xml version="1.0"?>
 <object_store type="distributed" id="primary" order="0">
@@ -218,6 +239,7 @@ this file is used to manage different object storages
 the tag `weight` determines where Galaxy write more is high more high is the priority
 
 ###### Sorting hat 
+
 [source-code](https://github.com/usegalaxy-eu/sorting-hat)
 
 location in galaxy at `/opt/galaxy/dynamic_rules/usegalaxy` 
@@ -227,4 +249,71 @@ location in galaxy at `/opt/galaxy/dynamic_rules/usegalaxy`
 - `sorting_hat.py` -> sorting hat executable 
 - `sorting_hat.yaml` -> specific configuration sorting hat
 - `tool_destinations.yaml` -> tools requirements es: core, ram, gpus
+
+###### Galaxy mantainment 
+
+[tutorials](https://training.galaxyproject.org/archive/2022-01-01/topics/admin/tutorials/maintenance/slides-plain.html)
+
+crontab jobs on the usegalaxy.eu
+
+```bash
+root@sn06:~$ crontab -l
+#Ansible: Restart workflow schedulers
+0 4 * * * /bin/bash -c 'for (( c=0; c<3; c++ )); do systemctl restart galaxy-workflow-scheduler@$c && sleep 240; done'
+#Ansible: Restart handlers
+0 3 * * * /bin/bash -c 'for (( c=0; c<6; c++ )); do systemctl restart galaxy-handler@$c && sleep 240; done'
+#Ansible: Restart zerglings
+30 3 * * * /bin/bash -c 'for (( c=0; c<6; c++ )); do systemctl restart galaxy-zergling@$c && sleep 240; done'
+#Ansible: Clean up old logs
+0 0 * * * journalctl --vacuum-time=1d -u galaxy-zergling@* galaxy-handler@* 2>/dev/null
+#Ansible: Certbot automatic renewal.
+40 20 * * * /opt/certbot/bin/certbot renew --quiet --no-self-upgrade 
+```
+
+``` bash 
+galaxy@sn06:~$ crontab -l
+#Ansible: Fix ftp
+*/15 * * * * /usr/bin/fix-ftp
+#Ansible: Fix unscheduled jobs
+*/20 * * * * /usr/bin/galaxy-fix-unscheduled-jobs
+#Ansible: Remove old FTP data
+0 1 * * * cd "/data/jwd/incoming" && find . -type f -not -newermt "3 months ago" -exec rm '{}' +
+#Ansible: Fix Missing API keys for IE users
+*/5 * * * * /usr/bin/galaxy-fix-missing-api-keys
+#Ansible: Recalculate user quotas
+15 22 * * * /usr/bin/galaxy-fix-user-quotas
+#Ansible: Attribute ELIXIR quota to ELIXIR AAI users
+14 22 * * * /usr/bin/galaxy-fix-elixir-user-quotas
+#Ansible: Slurp daily Galaxy stats into InfluxDB
+0 0 * * * /usr/bin/galaxy-slurp
+#Ansible: Slurp up-to-today galaxy stats into InfluxDB upto version
+0 4 * * * /usr/bin/galaxy-slurp-upto
+#Ansible: Condor maintenance tasks submitter
+0 23 * * * /data/dnb01/maintenance/htcondor_crontab_scheduling_submitter.sh
+#Ansible: Gxadmin Galaxy clean up
+0 */6 * * * /usr/bin/env GDPR_MODE=1 PGUSER=galaxy PGHOST=sn05.galaxyproject.eu GALAXY_ROOT=/opt/galaxy/server GALAXY_CONFIG_FILE=/opt/galaxy/config/galaxy.yml GALAXY_LOG_DIR=/var/log/galaxy GXADMIN_PYTHON=/opt/galaxy/venv/bin/python /usr/bin/gxadmin galaxy cleanup 60
+#Ansible: Docker clean up
+30 2 * * * . /opt/galaxy/.bashrc && docker system prune -f > /dev/null
+
+#Ansible: Call sync-to-nfs
+30 2 * * * /usr/bin/galaxy-sync-to-nfs
+#Ansible: Condor release held jobs increasing memory
+*/15 * * * * /usr/bin/htcondor-release-held-jobs
+
+```
+
+gxadmin is widley used for the manteniance e.g:
+
+`gxadmin galaxy_cleanup 60` delete datasets older than 60 days 
+
+###### PULSAR configuration
+
+[connection with pulsar]( https://github.com/usegalaxy-eu/pulsar-infrastructure-playbook/blob/master/templates/it01.pulsar.galaxyproject.eu/app.yml.j2)
+
+`message_queue_url: {{ message_queue_url }}`
+
+[each manager](https://github.com/usegalaxy-eu/pulsar-infrastructure-playbook/blob/99d33234cf74b54c23d39fb48d2089b9839250b6/templates/it01.pulsar.galaxyproject.eu/app.yml.j2#L9) is a instance  
+
+
+[galaxy config](https://github.com/usegalaxy-eu/infrastructure-playbook/blob/2b50f3edec3c4a24e96cdb372ba8281624fb5003/group_vars/sn06.yml#L576)
 
