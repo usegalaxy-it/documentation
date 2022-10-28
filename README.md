@@ -78,7 +78,7 @@ the configuration of the nfs, in order to allow to galaxy user and condor to wri
 
 ##### Postgresql
 ``` bash 
-ansible-playbook --private-key ~/.ssh/laniakea-robot.key -i hosts database.yml
+ansible-playbook --private-key ~/.ssh/ssh-priv.key -i hosts database.yml
 ```
 control if postgresql is active and running on the database machine 
 ``` bash
@@ -148,7 +148,7 @@ postgres_pass: "{{ _galaxy_db_pass }}"
 ##### RabbitMQ
 
 ```bash
-ansible-playbook --private-key ~/.ssh/laniakea-robot.key -i hosts rabbitmq.yml
+ansible-playbook --private-key ~/.ssh/ssh-priv.key -i hosts rabbitmq.yml
 ```
 check if created certificate are visible and mounted on the rabbitmq container to debug ssl connection check the [throubleshooting doc ](https://www.rabbitmq.com/troubleshooting-ssl.html)
 rabbit will be installed and run on a the official docker container on the rabbitmq host
