@@ -1,4 +1,4 @@
-# Private Documentation Usegalaxy Deployment
+# Documentation Usegalaxy-it Deployment
 ## Infrastructure creation using Terraform
 - [install terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli#install-terraform)
 - clone the [infrastructure repository](https://github.com/pmandreoli/infrastructure)
