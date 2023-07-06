@@ -1,4 +1,7 @@
-# Documentation Usegalaxy-it Deployment
+# UseGalaxy-it documentation
+
+[![documentation](https://img.shields.io/badge/documentation-online-blue)](https://usegalaxy-it.github.io/documentation/)
+
 ## Infrastructure creation using Terraform
 - [install terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli#install-terraform)
 - clone the [infrastructure repository](https://github.com/pmandreoli/infrastructure)
