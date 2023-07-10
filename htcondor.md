@@ -11,13 +11,13 @@
   - [HTCondor Installation Step](#htcondor-installation-step)
     - [Central Manager](#central-manager)
       - [Manual installation on CM VM](#manual-installation-on-cm-vm)
-      - [Installation by `usegalaxy_eu.htcondor` Ansible role](#installation-by-usegalaxy_euhtcondor-ansible-role)
+      - [Installation by Ansible role](#installation-by-ansible-role)
     - [Submit machine](#submit-machine)
       - [Manual installation on submit VM](#manual-installation-on-submit-vm)
-      - [Installation by `usegalaxy_eu.htcondor` Ansible role](#installation-by-usegalaxy_euhtcondor-ansible-role-1)
+      - [Installation by Ansible role](#installation-by-ansible-role-1)
     - [Executor(s)](#executors)
       - [Manual installation on executor VM](#manual-installation-on-executor-vm)
-      - [Installation by `usegalaxy_eu.htcondor` ansible role](#installation-by-usegalaxy_euhtcondor-ansible-role-2)
+      - [Installation by Ansible role](#installation-by-ansible-role-2)
   - [Useful HTCondor CLI commands](#useful-htcondor-cli-commands)
   - [References](#references)
 
@@ -195,8 +195,8 @@ sudo systemctl restart condor
 sudo systemctl enable condor
 ```
 
-#### Installation by `usegalaxy_eu.htcondor` Ansible role
-You can automate the installation process using the usegalaxy_eu.htcondor Ansible role. Specify the following variables:   
+#### Installation by Ansible role
+You can automate the installation process using the `usegalaxy_eu.htcondor` Ansible role. Specify the following variables:   
 **!NB: Be careful with `condor_password` variable and define it in a vault encrypted file**
 ```YAML
 - role: usegalaxy_eu.htcondor
@@ -244,7 +244,7 @@ sudo systemctl restart condor
 sudo systemctl enable condor
 ```
 
-#### Installation by `usegalaxy_eu.htcondor` Ansible role
+#### Installation by Ansible role
 Automate the step using `usegalaxy_eu.htcondor` role. Specify the following variables:   
 ```YAML
 - role: usegalaxy_eu.htcondor
@@ -300,7 +300,7 @@ sudo systemctl restart condor
 sudo systemctl enable condor
 ```
 
-#### Installation by `usegalaxy_eu.htcondor` ansible role
+#### Installation by Ansible role
 Automate the step using `usegalaxy_eu.htcondor` role. Specify the following variables:   
 ```YAML
 - role: usegalaxy_eu.htcondor
