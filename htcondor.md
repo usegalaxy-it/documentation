@@ -12,6 +12,7 @@
     - [Central Manager](#central-manager)
       - [Manual installation on CM VM](#manual-installation-on-cm-vm)
       - [Installation by Ansible role](#installation-by-ansible-role)
+      - [Install an auto-approval rule on the Central Manager](#install-an-auto-approval-rule-on-the-central-manager)
     - [Submit machine](#submit-machine)
       - [Manual installation on submit VM](#manual-installation-on-submit-vm)
       - [Installation by Ansible role](#installation-by-ansible-role-1)
@@ -217,6 +218,30 @@ You can automate the installation process using the `usegalaxy_eu.htcondor` Ansi
     condor_enforce_role: false
 ```
 
+#### Install an auto-approval rule on the Central Manager 
+
+`condor_token_request_auto_approve` command automatically approves any daemons starting on a specified network for a fixed period of time. Within the auto-approval rule’s lifetime, start the submit and execute hosts inside the appropriate network. The token requests for the corresponding daemons (the condor_master, condor_startd, and condor_schedd) will be automatically approved and installed into `/etc/condor/tokens.d/`
+
+This feature can be implemented simply by running:  
+```bash
+condor_token_request_auto_approve -netblock <private_network_CIDR> -lifetime 3600
+```
+
+You can create a cron job that is executed every lifetime period, so there's no need to worry about the time constraint and the tokens will always be approved:  
+```bash
+0 * * * * /usr/bin/condor_token_request_auto_approve -netblock <private_network_CIDR> -lifetime 3660
+```
+
+Example Ansible task:  
+```YAML
+tasks:
+    - name: Condor auto approve
+        ansible.builtin.cron:
+        name: condor_auto_approve
+        minute: 0
+        job: '/usr/bin/condor_token_request_auto_approve -netblock <private_network_CIDR> -lifetime 3660'
+```
+
 ### Submit machine
 
 #### Manual installation on submit VM
@@ -348,7 +373,7 @@ Some useful commands that will help to check the installation and configuration 
 | condor_ssh_to_job <job_id>                       | Establishes an SSH connection to the machine where a specific HTCondor job is running. It allows to access the job's execution environment interactively, enabling troubleshooting, debugging, or performing additional actions.   |
 | condor_submit <submit_file>                      | Submits a job to the HTCondor system using a job description file (submit file). It specifies the job's requirements, input files, and execution details, allowing users to submit custom jobs for execution on the HTCondor pool. |
 | condor_rm <job_id>                               | Removes a specific HTCondor job from the queue. It cancels the job's execution and removes it from the HTCondor system, freeing up the allocated resources and stopping any ongoing processing associated with the job.            |
-
+| condor_auto_approve                              | Automatically approves all pending job submissions in the HTCondor queue, bypassing manual approval.                                                                                                                               |
 ## References
 
 [HTCondor Documentation](https://htcondor.readthedocs.io/en/latest/).  
