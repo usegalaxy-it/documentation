@@ -135,7 +135,7 @@ share  -rw,hard,intr,nosuid,quota  <nfs_server_ip>:/data/share
 ```
 > This `/etc/auto.master.d/data.autofs` file is included in `auto.master` configuration file. The `/data` directory should be automounted using the configuration file `/etc/auto.data`. All other directories (`/-` represents the default) should be automounted using the configuration file `/etc/auto.usrlocal`. NFS version 3 is used.The mount options specified for the NFS share include read-write access (rw), hard mount (hard), interruptible mount (intr), no setuid allowed (nosuid), and the use of quotas (quota)
 
-This step can be automated using `usegalaxy-eu.autofs` role specifying next variables:
+This step can be automated using `usegalaxy-eu.autofs` role specifying the next variables:
 ```YAML
 - role: usegalaxy-eu.autofs
   vars:
@@ -154,20 +154,20 @@ This step can be automated using `usegalaxy-eu.autofs` role specifying next vari
 
 ## HTCondor Installation Step
 
-HTCondor consists of three primary roles: Submit, Central Manager, and Executor:  
+HTCondor consists of three primary roles: Submit, Central Manager and Executor:  
 
 1. Submit Role:  
-    The Submit role is responsible for submitting jobs to the HTCondor system. Users (*Galaxy*) interact with the Submit role to define the requirements, input data, and execution details of their jobs. They typically use a job description file to specify these parameters. Once the job is submitted, the Submit role communicates with the Central Manager to find suitable resources for executing the job. It acts as the entry point for users to submit their computational tasks to the HTCondor system.
+    The Submit role is responsible for submitting jobs to the HTCondor system. Users (*Galaxy*) interact with the Submit role to define the requirements, input data, and execution details of the jobs. Once the job is submitted, the Submit role communicates with the Central Manager to find suitable resources for executing the job. It acts as the entry point for *Galaxy* to submit computational tasks to the HTCondor system.  
 
 2. Central Manager Role:  
-    The Central Manager acts as the central coordination point within an HTCondor pool. It maintains a global view of the available computing resources and manages the job scheduling and resource allocation processes. When a job is submitted, the Central Manager receives the job request from the Submit role and matches it with appropriate resources in the pool. It considers factors such as job requirements, resource availability, and policies defined by the system administrator to make optimal scheduling decisions. The Central Manager also handles job matchmaking, negotiates resource allocations, and provides monitoring and status updates to the Submit role and other components.
+    The Central Manager acts as the central coordination point within an HTCondor pool. It maintains a global view of the available computing resources and manages the job scheduling and resource allocation processes. When a job is submitted, the Central Manager receives the job request from the Submit role and matches it with appropriate resources in the pool and provides monitoring and status updates to the Submit role and other components.  
 
 3. Executor Role:  
-    The Executor role represents the computing resources available in the HTCondor pool, such as individual machines or clusters. Executors run on these resources and execute the submitted jobs. Once the Central Manager allocates a job to an Executor, it transfers the necessary input files and instructions to the Executor (in this setup the files and submit configurations are stored in shared directories). The Executor then manages the execution of the job, which can include launching and monitoring the application, handling input/output operations, and reporting the job status back to the Central Manager. Executors play a crucial role in executing jobs efficiently and providing the computing power required for the HTCondor system.
+    The Executor role represents the computing resources available in the HTCondor pool, such as individual machines or clusters. Executors run on these resources and execute the submitted jobs. Once the Central Manager allocates a job to an Executor, it transfers the necessary input files and instructions to the Executor (in this setup the files and submit configurations are stored in shared directories). The Executor then manages the execution of the job, which can include launching and monitoring the application, handling input/output operations, and reporting the job status back to the Central Manager.  
 
 Starting from version 9.0.0, HTCondor introduces a new authentication mechanism called IDTOKENS. With this method, it is necessary to set the same password for all machines in the cluster. To enable this authentication mechanism, the condor_collector process (located on the Central Manager in this configuration) will automatically generate the pool signing key named POOL upon startup if the file does not exist.  
-It is recommended to use the latest stable version of HTCondor, which is currently v10.6.0. When setting up HTCondor, it is generally advised to follow a specific sequence: start with the central manager, add the access point(s), and finally, include the execute machine(s).  
-The existing Ansible role `usegalaxy_eu.htcondor` can be used to set up HTCondor or it can be done manually.
+Using the latest stable version of HTCondor is recommended, which is currently v10.6.0. When setting up HTCondor, it is generally advised to follow a specific sequence: start with the central manager, add the access point(s), and finally, include the execute machine(s).  
+The existing Ansible role `usegalaxy_eu.htcondor` can be used to set up HTCondor or done manually.  
 
 ### Central Manager
 
@@ -176,7 +176,7 @@ The existing Ansible role `usegalaxy_eu.htcondor` can be used to set up HTCondor
 ```bash 
 curl -fsSL https://get.htcondor.org | sudo GET_HTCONDOR_PASSWORD="<htcondor_password>" /bin/bash -s -- --no-dry-run --central-manager <central_manager_name_or_IP>
 ```
-2. Populate `/etc/condor/condor_config.local`. This configuration will start necessary daemons. The collector daemon is the one that is responsible for issuing the pool signing key for authorization of other machines.
+2. Populate `/etc/condor/condor_config.local`. This configuration will start the necessary daemons. The collector daemon is the one that is responsible for issuing the pool signing key for authorization of other machines.
 ```bash
 ALLOW_WRITE = *
 ALLOW_READ = $(ALLOW_WRITE)
@@ -198,7 +198,7 @@ sudo systemctl enable condor
 
 #### Installation by Ansible role
 You can automate the installation process using the `usegalaxy_eu.htcondor` Ansible role. Specify the following variables:   
-**!NB: Be careful with `condor_password` variable and define it in a vault encrypted file**
+**!NB: Be careful with `condor_password` variable and define it in a vault-encrypted file**
 ```YAML
 - role: usegalaxy_eu.htcondor
   vars:
@@ -365,11 +365,11 @@ Some useful commands that will help to check the installation and configuration 
 | condor_status                                    | Retrieves the current status of the HTCondor pool. It displays information about the available resources, such as the number of slots, their state (idle, busy, etc.), and resource utilization.                                   |
 | condor_status -af Name Slottype Cpus Memory Disk | Extends the condor_status command to provide more detailed information about the slots in the HTCondor pool. It includes the name, slot type, CPU count, memory usage, and disk space availability for each slot in the pool.      |
 | condor_history                                   | Retrieves the historical information about completed HTCondor jobs. It displays details such as job status, submission time, completion time, and resource usage for previously executed jobs in the HTCondor system.              |
-| condor_q                                         | Displays the current status of jobs in the HTCondor queue. It provides information about the jobs' ID, status (running, idle, held, etc.), priority, submit time, and other details.                                               |
-| condor_q -better-analyze <job_id>                | Performs a detailed analysis of a specific job in the HTCondor queue. It provides insights into the job's resource requirements, resource usage, priority, and other factors that impact the job's execution and performance.      |
+| condor_q                                         | Displays the current status of jobs in the HTCondor queue. It provides information about the jobs' ID, status (running, idle, held, etc.), priority, submission time, and other details.                                               |
+| condor_q -better-analyze <job_id>                | Performs detailed analysis of a specific job in the HTCondor queue. It provides insights into the job's resource requirements, resource usage, priority, and other factors that impact the job's execution and performance.      |
 | condor_q -run                                    | Displays the jobs in the HTCondor queue that are currently running. It provides real-time information about the running jobs, including their ID, status, resource usage, and other relevant details.                              |
 | condor_q -hold                                   | Lists the jobs in the HTCondor queue that are currently on hold. It provides information about the held jobs, such as their ID, reason for being held, and other relevant details.                                                 |
-| condor_tail <job_id>                             | Displays the output produced by a running or completed HTCondor job. It allows to monitor the job's progress and view its standard output and error streams in real-time or as the job progresses.                                 |
+| condor_tail <job_id>                             | Displays the output produced by a running or completed HTCondor job. It allows one to monitor the job's progress and view its standard output and error streams in real-time or as the job progresses.                                 |
 | condor_ssh_to_job <job_id>                       | Establishes an SSH connection to the machine where a specific HTCondor job is running. It allows to access the job's execution environment interactively, enabling troubleshooting, debugging, or performing additional actions.   |
 | condor_submit <submit_file>                      | Submits a job to the HTCondor system using a job description file (submit file). It specifies the job's requirements, input files, and execution details, allowing users to submit custom jobs for execution on the HTCondor pool. |
 | condor_rm <job_id>                               | Removes a specific HTCondor job from the queue. It cancels the job's execution and removes it from the HTCondor system, freeing up the allocated resources and stopping any ongoing processing associated with the job.            |
@@ -378,5 +378,5 @@ Some useful commands that will help to check the installation and configuration 
 
 [HTCondor Documentation](https://htcondor.readthedocs.io/en/latest/).  
 [HTCondor Cluster Deployment](https://github.com/usegalaxy-it/htcondor-deployment) using Terraform and Ansible provisioning.   
-[VGCN Infrastrusture Managenent](https://github.com/usegalaxy-it/vgcn-infrastructure) - Jenkins setup for managing Virtual Galaxy Compute Nodes.  
+[VGCN Infrastructure Management](https://github.com/usegalaxy-it/vgcn-infrastructure) - Jenkins setup for managing Virtual Galaxy Compute Nodes.  
 [Pre-built VGGP Images](https://usegalaxy.eu/static/vgcn/) repository.  
