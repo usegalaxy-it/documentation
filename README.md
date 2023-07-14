@@ -2,3 +2,6 @@
 
 ## UseGalaxy installation
 - [Infrastructure deployment](./deploy.md)
+
+## Others
+- [Deploy HTCondor](./htcondor.md)
