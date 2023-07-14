@@ -36,13 +36,15 @@ It is recommended to install PostgreSQL version 12 or higher as some important f
 Check variables that are located in:  
 - `group_vars/database.yml`
 
-| Variable                     | Description                                                   |
-| ---------------------------- | ------------------------------------------------------------- |
-| postgresql_version           | PostgreSQL version to be installed.                           |
-| postgresql_objects_users     | Name and password of user(s) (Galaxy) in a list format.       |
-| postgresql_objects_databases | Name and owner of database(s) (Galaxy) in a list format.      |
-| postgresql_conf              | PostgreSQL configuration options in a list format.            |
-| postgresql_pg_hba_conf       | Connection and authentication options for PostgreSQL clients. |
+| Variable                            | Description                                                   |
+| ----------------------------------- | ------------------------------------------------------------- |
+| postgresql_version                  | PostgreSQL version to be installed.                           |
+| postgresql_objects_users            | Name and password of user(s) (Galaxy) in a list format.       |
+| postgresql_objects_databases        | Name and owner of database(s) (Galaxy) in a list format.      |
+| postgresql_conf                     | PostgreSQL configuration options in a list format.            |
+| postgresql_pg_hba_conf              | Connection and authentication options for PostgreSQL clients. |
+| postgresql_backup_dir               | Location of local PITR backup. Must be set to enable PITR.    |
+| postgresql_backup_rsync_backup_opts | Rsync options. Must be set in the next form: `'-r -p -t -g'`. |
 
 - `secret_group_vars/db-main.yml` encrypted file for sensitive variables.  
 
@@ -77,7 +79,7 @@ The main features of the PostgreSQL role include:
 3. **Backup Scripts**: Enable Point-in-Time Recovery (PITR) backups with a specified backup directory and schedule.  
 To enable PITR set the value of `postgresql_backup_dir` to the desired directory.  
 
-**NB!** Backup script doesn't work when you indicate a remote location for backup. To handle this situation additional database dump to remote machine is done by `usegalaxy-it.postgres_backup`. More details about backup options for usegalaxy.it can be found in [Postgresql Backup](https://github.com/usegalaxy-it/documentation/blob/main/postgresql_backup.md) and [Postgresql Replication](https://github.com/usegalaxy-it/documentation/blob/main/postgresql_replication.md) documentation.
+**NB!** Backup script doesn't work when you indicate a remote location for backup. To handle this situation additional database dump to remote machine is done by `usegalaxy-it.postgres_backup`. More details about backup options for usegalaxy.it can be found in [Postgresql Backup](https://github.com/usegalaxy-it/documentation/blob/main/postgresql_backup.md)
 
 Sample playbook for PGSQL v.15 installation with local PITR daily backup:
 ```YAML
@@ -185,16 +187,18 @@ postgres=# \l+
 
 ## References
 
-[PostgreSQL Documentation](https://www.postgresql.org/docs/)
-[galaxyproject.postgresql_objects](https://github.com/galaxyproject/ansible-postgresql-objects) Ansible playbook
-[galaxyproject.postgresql](https://github.com/galaxyproject/ansible-postgresql) Ansible playbook  
+[PostgreSQL Documentation](https://www.postgresql.org/docs/)  
+[galaxyproject.postgresql_objects](https://github.com/galaxyproject/ansible-postgresql-objects) Ansible role  
+[galaxyproject.postgresql](https://github.com/galaxyproject/ansible-postgresql) Ansible role   
+
 Optional features to configure:  
-- [usegalaxy-it.postgres-replication](https://github.com/usegalaxy-it/usegalaxy-it.postgres-replication) Ansible playbook  
-- [usegalaxy-it.postgres-backup](https://github.com/usegalaxy-it/usegalaxy-it.postgres-backup) Ansible playbook  
+- [usegalaxy-it.postgres-replication](https://github.com/usegalaxy-it/usegalaxy-it.postgres-replication) Ansible role  
+- [usegalaxy-it.postgres-backup](https://github.com/usegalaxy-it/usegalaxy-it.postgres-backup) Ansible role  
+
 See also UseGalaxy.it-only features:  
 - [PostgreSQL Cluster](https://github.com/usegalaxy-it/documentation/blob/main/database_cluster.md) documentation  
 - [PostgreSQL Backup](https://github.com/usegalaxy-it/documentation/blob/main/postgresql_backup.md) documentation  
-- [PostgreSQL Replication](https://github.com/usegalaxy-it/documentation/blob/main/postgresql_replication.md) documentation  
+
 
 ## Author Information
 
