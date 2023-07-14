@@ -15,7 +15,7 @@ Infrastructure:
 
 ## Playbook description
 
-The playbook imports necessary plays and configures VMs in the next order:
+The playbook [`db_cluster.yml`](https://github.com/usegalaxy-it/infrastructure-playbook/blob/master/db_cluster.yml) imports necessary plays and configures VMs in the next order:
 1. Backup server. [`backup.yml`](https://github.com/usegalaxy-it/infrastructure-playbook/blob/master/backup.yml) play:
    - adds `postgres` user;   
    - creates directories for daily and weekly database dumps from Database Master VM;  
