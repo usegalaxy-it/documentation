@@ -4,4 +4,4 @@
 - [Infrastructure deployment](./deploy.md)
 
 ## Others
-- [deploy HTCondor](./htcondor.md)
+- [Deploy HTCondor](./htcondor.md)
