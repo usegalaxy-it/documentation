@@ -21,6 +21,7 @@
       - [Installation by Ansible role](#installation-by-ansible-role-2)
   - [Useful HTCondor CLI commands](#useful-htcondor-cli-commands)
   - [References](#references)
+  - [Author Information](#author-information)
 
 ## Introduction
 HTCondor is a specialized high-throughput computing (HTC) software system that enables users to harness the power of distributed computing resources to efficiently manage and execute large-scale computational workloads. It provides a framework for managing job scheduling, resource allocation, and workload management across a pool of computing resources.  
@@ -380,3 +381,7 @@ Some useful commands that will help to check the installation and configuration 
 [HTCondor Cluster Deployment](https://github.com/usegalaxy-it/htcondor-deployment) using Terraform and Ansible provisioning.   
 [VGCN Infrastructure Management](https://github.com/usegalaxy-it/vgcn-infrastructure) - Jenkins setup for managing Virtual Galaxy Compute Nodes.  
 [Pre-built VGGP Images](https://usegalaxy.eu/static/vgcn/) repository.  
+
+## Author Information
+
+[Polina Khmelevskaia](https://github.com/po-khmel)
