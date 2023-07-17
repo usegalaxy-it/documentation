@@ -13,6 +13,10 @@ Infrastructure:
 | Replica VM         | RockyLinux 9       |
 | Backup VM          | RockyLinux 9       |
 
+## Playbook Usage
+```bash
+ansible-playbook --private-key <path_to_priv_key> -i hosts db_cluster.yml
+```
 ## Playbook description
 
 The playbook [`db_cluster.yml`](https://github.com/usegalaxy-it/infrastructure-playbook/blob/master/db_cluster.yml) imports necessary plays and configures VMs in the next order:
