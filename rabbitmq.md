@@ -12,6 +12,8 @@
     - [Pre-Tasks Overview](#pre-tasks-overview)
     - [Main Roles Description](#main-roles-description)
     - [Additional Roles](#additional-roles)
+  - [Local Galaxy Connection](#local-galaxy-connection)
+  - [Connection to Pulsar](#connection-to-pulsar)
   - [Verify RabbitMQ Installation](#verify-rabbitmq-installation)
   - [References](#references)
   - [Author Information](#author-information)
@@ -21,9 +23,8 @@
 
 ### RabbitMQ
 
-RabbitMQ is a message broker that is used as an intermediary message passing system between the Galaxy server and Pulsar server. It enables efficient communication and coordination between these components by managing the exchange, routing, and delivery of messages.  
-
-It utilizes the Advanced Message Queueing Protocol (AMQP) for communcation between servers.   
+RabbitMQ is a message broker that is used as an intermediary message passing system between the servers. It utilizes the Advanced Message Queueing Protocol (AMQP). It enables efficient communication and coordination between these components by managing the exchange, routing, and delivery of messages.  
+RabbitMQ can be used to exchange messages between Galaxy server and Pulsar server. Also Galaxy uses AMQP internally for communicating between processes.  
 
 RabbitMQ sends messsages that include:  
 1. Job Initialization.  
@@ -193,13 +194,13 @@ rabbitmq_container:
 rabbitmq_container_pause: 60
 ```
 
-| Configuration Item       | Description                                                                                          |
-| ------------------------ | ---------------------------------------------------------------------------------------------------- |
-| rabbitmq_users           | Includes default `admin` user, `galaxy`, and `pulsar` users for job submission.                      |
-| rabbitmq_management      | Plugin that collects and aggregates system data, provides an API, and offers a UI for visualization. |
-| rabbitmq_config          | Configures RabbitMQ to accept only SSL/TLS connections and enables necessary metrics collection.     |
-| rabbitmq_container       | Docker container settings. Defines the container name and specifies the Docker image to pull.        |
-| rabbitmq_container_pause | Indicates the number of seconds to wait for the container to reach a running state.                  |
+| Configuration Item       | Description                                                                                                                                                                       |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| rabbitmq_users           | Includes default `admin` user, `galaxy` user for internal AMQP connection with local Pulsar runner (pulsar_embedded), and `pulsar` user for job submission to remote Pulsar node. |
+| rabbitmq_management      | Plugin that collects and aggregates system data, provides an API, and offers a UI for visualization.                                                                              |
+| rabbitmq_config          | Configures RabbitMQ to accept only SSL/TLS connections and enables necessary metrics collection.                                                                                  |
+| rabbitmq_container       | Docker container settings. Defines the container name and specifies the Docker image to pull.                                                                                     |
+| rabbitmq_container_pause | Indicates the number of seconds to wait for the container to reach a running state.                                                                                               |
 
 
 ### Additional Roles
@@ -214,6 +215,26 @@ rabbitmq_container_pause: 60
 | `geerlingguy.redis`           | Installs and configures Redis.                                                                                                                                                                                         | `redis_version: "6.0"`<br>`redis_port: 6379`<br>`redis_bind: "127.0.0.1"`<br>`redis_requirepass: ""`                                                                                                          |
 | `os_hardening`                | Performs hardening tasks on the operating system.                                                                                                                                                                      | `os_auditd_max_log_file_action: rotate`<br>`os_auditd_space_left: 500`<br>`os_auditd_space_left_action: suspend`                                                                                              |
 | `ssh_hardening`               | Performs hardening tasks specific to SSH.                                                                                                                                                                              | Does not require any specific variables to be defined                                                                                                                                                         |
+## Local Galaxy Connection
+
+Galaxy can use RabbitMQ for internal communication between processes. To enable it, specify connection string in galaxy config file:
+```YAML
+amqp_internal_connection = pyamqp://galaxy:<mq_galaxy_pass>@<RabbitMQ_hostname>:5671/galaxy?ssl=1 
+```
+
+## Connection to Pulsar
+
+If you are setting up your own Pulsar node, refer to this [Pulsar Network](https://pulsar-network.readthedocs.io/en/latest/index.html) documentation.  
+To connect your RabbitMQ to Pulsar, you will need to specify the connection string in the runner configuration:  
+```YAML
+- id: <pulsar_to_connect>
+          load: galaxy.jobs.runners.pulsar:PulsarMQJobRunner
+          params:
+            amqp_url: "pyamqp://<pulsar_to_connect>:<mq_pulsar_pass>@<pulsar_hostname>:5671//pulsar/<pulsar_to_connect>?ssl=1"
+          #...................
+          #...other configs...
+          #...................
+```
 
 ## Verify RabbitMQ Installation
 
@@ -232,7 +253,6 @@ docker exec rabbit_hole rabbitmq-diagnostics status
 docker logs rabbit_hole
 ```
 4. Visit the UI `http://<RabbitMQ_hostname>:15672/` using your admin credentials.
-
 
 ## References
 
