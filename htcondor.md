@@ -42,6 +42,10 @@ Infrastructure:
 
 VGGP images contain a set of prebuilt instruments such as Pulsar, NFS, CVMFS, Apptainer, Docker, and Telegraf. These tools are required to run and monitor Galaxy jobs on the Virtual Galaxy Compute Nodes (VGCN). You can find the images at https://usegalaxy.eu/static/vgcn/. It is recommended to use the latest main version.
 
+**NB!** Red Hat Enterprise Linux 9 (RHEL 9) [deprecated SHA-1](https://www.redhat.com/en/blog/rhel-security-sha-1-package-signatures-distrusted-rhel-9) for signing for security reasons and supports more secure SHA-256. However older HTCondor versions still uses SHA-1 signing. To handle this problem it's recommended:
+- to install latest HTCondor version or version>=10 on RHEL 9;  
+OR  
+- install HTCondor v.8 on RHEL 8.
 
 ## NFS Share Configuration Step
 
