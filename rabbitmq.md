@@ -40,7 +40,7 @@ Here's why RabbitMQ is useful:
 1. RabbitMQ ensures that messages are reliably delivered from the sender to the intended recipient, even if the recipient is temporarily unavailable or offline. It handles the message delivery, retries, and error handling.
 2. RabbitMQ supports a distributed architecture, allowing multiple instances of RabbitMQ to be set up and work together.
 3. RabbitMQ allows messages to be prioritized based on their importance and urgency.
-4. 
+
 ### Docker
 
 RabbitMQ is written in Erlang programming language. Running RabbitMQ in a **Docker container** helps to avoid Erlang version dependencies by providing an isolated and consistent environment with the specific Erlang version required. It simplifies version control and dependency management. 
