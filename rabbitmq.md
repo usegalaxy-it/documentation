@@ -7,7 +7,7 @@
     - [Nginx](#nginx)
     - [Redis](#redis)
   - [Requirements](#requirements)
-  - [Usage](#usage)
+  - [Playbook Usage](#playbook-usage)
   - [Playbook Description](#playbook-description)
     - [Pre-Tasks Overview](#pre-tasks-overview)
     - [Main Roles Description](#main-roles-description)
@@ -231,10 +231,11 @@ docker logs rabbit_hole
 ## References
 
 Documentation:  
-[RabbitMQ](https://www.rabbitmq.com/) Official documentation for RabbitMQ.  
-[NGINX](https://nginx.org/) Official documentation for NGINX.  
+[RabbitMQ](https://www.rabbitmq.com/) Official documentation.  
+[NGINX](https://nginx.org/) Official documentation.  
 [Docker](https://docs.docker.com/) Official documentation for Docker.  
-[Pulsar Network](https://pulsar-network.readthedocs.io/en/latest/index.html) Documentation for Pulsar Network, a distributed Galaxy job execution system.  
+[Pulsar Network](https://pulsar-network.readthedocs.io/en/latest/index.html). Official documentation for Pulsar Network, a distributed Galaxy job execution system.  
+[Pulsar application](https://pulsar.readthedocs.io/en/latest/index.html) Official documentation.
 
 Ansible Roles:  
 [galaxyproject.nginx](https://galaxy.ansible.com/galaxyproject/nginx) Ansible role for managing NGINX configurations.  
