@@ -1,7 +1,7 @@
 [![documentation](https://img.shields.io/badge/documentation-online-blue)](https://usegalaxy-it.github.io/documentation/)
 
 ## UseGalaxy installation
-- [Infrastructure deployment](./deploy.md)
+- [Infrastructure deployment - deprecated](./deploy.md)
 
 ## Database
 - [Deploy PostgreSQL database](./postgresql_installation.md)
