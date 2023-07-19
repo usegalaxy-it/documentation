@@ -6,7 +6,7 @@
 ## Database
 - [Deploy PostgreSQL database](./postgresql_installation.md)
 - [Deploy PostgreSQL cluster](./database_cluster.md)
-- [Deploy PostgreSQL backup](./postgresql_backup)
+- [Deploy PostgreSQL backup](./postgresql_backup.md)
 
 ## Message Queue
 - [Deploy RabbitMQ](./rabbitmq.md)
