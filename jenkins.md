@@ -136,6 +136,9 @@ Build Triggers:
   - Projects to watch: `usegalaxy.it-tools`
   - Trigger even if the build is unstable.
 
+Build Environment:
+- Delete workspace before build starts
+
 Build Steps:
 - Virtualenv Builder: 
   - Python version: `Python-3.8.10`
