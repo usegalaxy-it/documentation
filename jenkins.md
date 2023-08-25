@@ -3,6 +3,7 @@
   - [Galaxy Server Update](#galaxy-server-update)
   - [Usegalaxy.it Tools Update](#usegalaxyit-tools-update)
     - [Install/Update Tools](#installupdate-tools)
+    - [Restart Gunicorns](#restart-gunicorns)
     - [Push Reports](#push-reports)
   - [Email Notifications Guide](#email-notifications-guide)
   - [References](#references)
@@ -59,6 +60,7 @@ Post-build Actions:
 
 Jenkins jobs run every night at ~ 3:00 CET.  
 `usegalaxy.it-tools` installs and updates tools, saving the logs and updating tools repo with new lockfiles. It sends an email to a specified list of recipients in case of job failure.  
+`usegalaxy.it-restart-gunicorns` is triggered if the previous job is successful. It restarts gunicorns one by one in order to make the newly installed toools visible and accessible by users.  
 `usegalaxy.it-tools-reports` job runs if the previous job is successful and transforms logs into the Markdown report, saving it to github repo. 
 
 ### Install/Update Tools
@@ -116,6 +118,36 @@ Post-build Actions:
   - Recipients: `<admin1@gmail.com>, <admin1@gmail.com>`
   - Send e-mail for every unstable build
 
+### Restart Gunicorns
+
+The configuration overview of the `usegalaxy.it-restart-gunicorns` Jenkins job:
+
+General:
+- Discard old builds:
+  - Strategy: Log Rotation
+    - Max # of builds to keep: `7`
+
+Source Code Management:
+- None
+
+Build Triggers:
+- Build after other projects are built: 
+  - Projects to watch: `usegalaxy.it-tools`
+  - Trigger even if the build is unstable.
+
+Build Environment:
+- Delete workspace before build starts
+  
+Build Steps:
+- Virtualenv Builder: 
+  - Python version: `Python-3.8.10`
+  - Nature: `Shell`
+  - Command:
+```bash
+# run gxadmin admin utility to restart gunicorns sequentially
+ssh <usegalaxy.it_ssh_user>@<usegalaxy.it_IP> "sudo gxadmin gunicorn handler-restart"
+```
+
 ### Push Reports
 
 The configuration overview of the `usegalaxy.it-tools-reports` Jenkins job:
@@ -133,7 +165,7 @@ Source Code Management:
 
 Build Triggers:
 - Build after other projects are built: 
-  - Projects to watch: `usegalaxy.it-tools`
+  - Projects to watch: `usegalaxy.it-restart-gunicorns`
   - Trigger even if the build is unstable.
 
 Build Environment:
