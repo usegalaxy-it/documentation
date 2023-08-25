@@ -60,7 +60,7 @@ Post-build Actions:
 
 Jenkins jobs run every night at ~ 3:00 CET.  
 `usegalaxy.it-tools` installs and updates tools, saving the logs and updating tools repo with new lockfiles. It sends an email to a specified list of recipients in case of job failure.  
-`usegalaxy.it-restart-gunicorns` is triggered if the previous job is successful. It restarts gunicorns one by one in order to make the newly installed toools visible and accessible by users.  
+`usegalaxy.it-restart-gunicorns` is triggered if the previous job is successful. It restarts gunicorns one by one in order to make the newly installed tools visible and accessible by users.  
 `usegalaxy.it-tools-reports` job runs if the previous job is successful and transforms logs into the Markdown report, saving it to github repo. 
 
 ### Install/Update Tools
