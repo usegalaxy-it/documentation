@@ -1,11 +1,22 @@
 # Total Perspective Vortex
 
+- [Total Perspective Vortex](#total-perspective-vortex)
+  - [Galaxy job configuration](#galaxy-job-configuration)
+  - [Entities and rules](#entities-and-rules)
+  - [General approach to tagging system (Scheduling)](#general-approach-to-tagging-system-scheduling)
+  - [How to configure routing all jobs to the remote Pulsar (including files upload)](#how-to-configure-routing-all-jobs-to-the-remote-pulsar-including-files-upload)
+  - [tpv\_auto\_lint](#tpv_auto_lint)
+  - [References](#references)
+  - [Author Information](#author-information)
+
 
 In UseGalaxy.it Galaxy can run jobs using local resources within the same VM or can assign them to the local HTCondor Executors or a remote Pulsar node. 
 
 In order to route the jobs to the appropriate location with the appropriate resources available, [Total Perspective Vortex (TPV)](https://total-perspective-vortex.readthedocs.io/en/latest/index.html) Python library is used. TPV provides a set of dynamic rules that can route entities (tools, users, roles) to appropriate destinations based on a tagging system. 
 
 The rules are stored in [`./files/galaxy/tpv`](https://github.com/usegalaxy-it/infrastructure-playbook/tree/master/files/galaxy/tpv) and are copied to Galaxy confing directory during the execution of `sn06.yml` playbook. 
+
+## Galaxy job configuration
 
 Galaxy should be configured to use TPV in the galaxy_jobconf, which is set in the [sn06 group_vars](https://github.com/usegalaxy-it/infrastructure-playbook/blob/master/group_vars/sn06.yml)
 
@@ -126,6 +137,7 @@ tools:
   ............
 
 # destinations.yml
+---
 destinations:
   pulsar_it03_tpv:
     inherits: pulsar_default
