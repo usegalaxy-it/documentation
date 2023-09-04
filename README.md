@@ -10,6 +10,11 @@
 
 ## Message Queue
 - [Deploy RabbitMQ](./rabbitmq.md)
+- [Deploy TPV](./tpv.md)
+
+## Tools
+- [Tools installation](./tools.md)
 
 ## Others
 - [Deploy HTCondor](./htcondor.md)
+- [CI/CD with Jenkins](./jenkins.md)
