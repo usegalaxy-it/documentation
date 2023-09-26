@@ -85,3 +85,16 @@ sudo tail /var/log/condor/SchedLog
 If it throws error like `ERROR: AUTHENTICATE:1003:Failed to authenticate with any method|AUTHENTICATE:1004:Failed to authenticate using FS|AUTHENTICATE:1004:Failed to authenticate using IDTOKENS`, you need to update the IDTOKEN:
 - ssh to HTCondor CM and copy IDTOKEN from `/etc/condor/tokens.d/condor@<CM_IP>`
 - ssh to Galaxy VM and write IDTOKEN to `/etc/condor/tokens.d/condor@<GalaxyVM_IP>`
+
+
+## References
+
+[UseGalaxy.it Infrastructure](https://github.com/usegalaxy-it/infrastructure) Terraform scripts  
+[VGCN Infrastructure](https://github.com/usegalaxy-it/vgcn-infrastructure)  
+[Pulsar Endoint Deployment](https://github.com/usegalaxy-eu/pulsar-deployment) Terraform scripts  
+[UseGalaxy.it Ansible playbooks](https://github.com/usegalaxy-it/infrastructure-playbook)
+
+
+## Author Information
+
+[Polina Khmelevskaia](https://github.com/po-khmel)
