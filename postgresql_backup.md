@@ -22,6 +22,8 @@ These Backup methods are not mutually exclusive and can be used in combination t
   
 *At Usegalaxy.it all three types of backups are implemented.*
 
+![The infrastructure of UseGalaxy.it Database cluster and the implemented backup methods](images/pgsql_backups.png)
+
 ## Requirements
 
 Ansible >= 2.9
