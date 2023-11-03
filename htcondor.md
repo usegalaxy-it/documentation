@@ -31,7 +31,8 @@ HTCondor allows users (Galaxy) to submit jobs to the system, which are then sche
 
 Ansible >= 2.9
 
-Infrastructure:
+Infrastructure:  
+
 | Resource            | Recommended Images |
 | ------------------- | ------------------ |
 | Central Manager VM  | VGGP               |
@@ -362,23 +363,23 @@ Automate the step using `usegalaxy_eu.htcondor` role. Specify the following vari
 
 ## Useful HTCondor CLI commands
 
-Some useful commands that will help to check the installation and configuration success and/or debugging:
-
-| Command                                          | Description                                                                                                                                                                                                                        |
-| ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| condor_version                                   | Displays the version and build information of the HTCondor software. It provides details such as the HTCondor version number, release date, and additional information about the software installation.                            |
-| condor_status                                    | Retrieves the current status of the HTCondor pool. It displays information about the available resources, such as the number of slots, their state (idle, busy, etc.), and resource utilization.                                   |
-| condor_status -af Name Slottype Cpus Memory Disk | Extends the condor_status command to provide more detailed information about the slots in the HTCondor pool. It includes the name, slot type, CPU count, memory usage, and disk space availability for each slot in the pool.      |
-| condor_history                                   | Retrieves the historical information about completed HTCondor jobs. It displays details such as job status, submission time, completion time, and resource usage for previously executed jobs in the HTCondor system.              |
-| condor_q                                         | Displays the current status of jobs in the HTCondor queue. It provides information about the jobs' ID, status (running, idle, held, etc.), priority, submission time, and other details.                                           |
-| condor_q -better-analyze <job_id>                | Performs detailed analysis of a specific job in the HTCondor queue. It provides insights into the job's resource requirements, resource usage, priority, and other factors that impact the job's execution and performance.        |
-| condor_q -run                                    | Displays the jobs in the HTCondor queue that are currently running. It provides real-time information about the running jobs, including their ID, status, resource usage, and other relevant details.                              |
-| condor_q -hold                                   | Lists the jobs in the HTCondor queue that are currently on hold. It provides information about the held jobs, such as their ID, reason for being held, and other relevant details.                                                 |
-| condor_tail <job_id>                             | Displays the output produced by a running or completed HTCondor job. It allows one to monitor the job's progress and view its standard output and error streams in real-time or as the job progresses.                             |
-| condor_ssh_to_job <job_id>                       | Establishes an SSH connection to the machine where a specific HTCondor job is running. It allows to access the job's execution environment interactively, enabling troubleshooting, debugging, or performing additional actions.   |
-| condor_submit <submit_file>                      | Submits a job to the HTCondor system using a job description file (submit file). It specifies the job's requirements, input files, and execution details, allowing users to submit custom jobs for execution on the HTCondor pool. |
-| condor_rm <job_id>                               | Removes a specific HTCondor job from the queue. It cancels the job's execution and removes it from the HTCondor system, freeing up the allocated resources and stopping any ongoing processing associated with the job.            |
-| condor_auto_approve                              | Automatically approves all pending job submissions in the HTCondor queue, bypassing manual approval.                                                                                                                               |
+Some useful commands that will help to check the installation and configuration success and/or debugging:  
+  
+| Command                                            | Description                                                                                                                                                                                                                        |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `condor_version `                                  | Displays the version and build information of the HTCondor software. It provides details such as the HTCondor version number, release date, and additional information about the software installation.                            |
+| `condor_status`                                    | Retrieves the current status of the HTCondor pool. It displays information about the available resources, such as the number of slots, their state (idle, busy, etc.), and resource utilization.                                   |
+| `condor_status -af Name Slottype Cpus Memory Disk` | Extends the condor_status command to provide more detailed information about the slots in the HTCondor pool. It includes the name, slot type, CPU count, memory usage, and disk space availability for each slot in the pool.      |
+| `condor_history`                                   | Retrieves the historical information about completed HTCondor jobs. It displays details such as job status, submission time, completion time, and resource usage for previously executed jobs in the HTCondor system.              |
+| `condor_q`                                         | Displays the current status of jobs in the HTCondor queue. It provides information about the jobs' ID, status (running, idle, held, etc.), priority, submission time, and other details.                                           |
+| `condor_q -better-analyze <job_id>`                | Performs detailed analysis of a specific job in the HTCondor queue. It provides insights into the job's resource requirements, resource usage, priority, and other factors that impact the job's execution and performance.        |
+| `condor_q -run`                                    | Displays the jobs in the HTCondor queue that are currently running. It provides real-time information about the running jobs, including their ID, status, resource usage, and other relevant details.                              |
+| `condor_q -hold`                                   | Lists the jobs in the HTCondor queue that are currently on hold. It provides information about the held jobs, such as their ID, reason for being held, and other relevant details.                                                 |
+| `condor_tail <job_id>`                             | Displays the output produced by a running or completed HTCondor job. It allows one to monitor the job's progress and view its standard output and error streams in real-time or as the job progresses.                             |
+| `condor_ssh_to_job <job_id>`                       | Establishes an SSH connection to the machine where a specific HTCondor job is running. It allows to access the job's execution environment interactively, enabling troubleshooting, debugging, or performing additional actions.   |
+| `condor_submit <submit_file>`                      | Submits a job to the HTCondor system using a job description file (submit file). It specifies the job's requirements, input files, and execution details, allowing users to submit custom jobs for execution on the HTCondor pool. |
+| `condor_rm <job_id>`                               | Removes a specific HTCondor job from the queue. It cancels the job's execution and removes it from the HTCondor system, freeing up the allocated resources and stopping any ongoing processing associated with the job.            |
+| `condor_auto_approve`                              | Automatically approves all pending job submissions in the HTCondor queue, bypassing manual approval.                                                                                                                               |
 ## References
 
 [HTCondor Documentation](https://htcondor.readthedocs.io/en/latest/).  

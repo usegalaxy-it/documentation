@@ -6,7 +6,8 @@ The playbook configures Database Cluster setup for Usegalaxy.it
 
 Ansible >= 2.9
 
-Infrastructure:
+Infrastructure:  
+
 | Resource           | Recommended Images |
 | ------------------ | ------------------ |
 | Database Master VM | RockyLinux 9       |

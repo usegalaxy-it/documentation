@@ -205,7 +205,7 @@ rabbitmq_container_pause: 60
 
 ### Additional Roles
 
-
+  
 | Role                          | Description                                                                                                                                                                                                            | Variables                                                                                                                                                                                                     |
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `usegalaxy_eu.handy.os_setup` | Configures the operating system with initial settings, including hostname, enabling PowerTools repository, and creating the rabbitmq user. Remaps existing user `systemd-coredump` with uid:gid 999:999 to `rabbitmq`. | `enable_hostname: true`<br>`enable_powertools: true`<br>`enable_remap_user: true`<br>`enable_create_user: true`<br>`user_name: rabbitmq`<br>`user_uid: 999`<br>`user_group_name: rabbitmq`<br>`user_gid: 999` |

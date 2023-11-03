@@ -13,6 +13,7 @@ The UseGalaxy.it infrastructure Terraform scripts create a database cluster, par
 VGCN (Virtual Galaxy Compute Nodes) and Pulsar Endpoint are provisioned separately.
 
 ### UseGalaxy.it virtual machines’ (ADA CLOUD) flavours and images
+  
 | Virtual Machine | Flavour Type | vCPUs | RAM (GB) | Storage (GB) | Base Image    |
 | --------------- | ------------ | ----- | -------- | ------------ | ------------- |
 | PostgreSQL DB   | fl.ada.l     | 16    | 120      | 30           | Rocky Linux 9 |
@@ -27,6 +28,7 @@ VGCN (Virtual Galaxy Compute Nodes) and Pulsar Endpoint are provisioned separate
 The available storage is complemented by a 300 GB volume attached to the NFS server.  
 
 ### Infrastructure repos
+  
 | Component                   | Repository                                          |
 | --------------------------- | --------------------------------------------------- |
 | UseGalaxy.it Infrastructure | https://github.com/usegalaxy-it/infrastructure      |

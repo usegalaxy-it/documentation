@@ -28,7 +28,8 @@ These Backup methods are not mutually exclusive and can be used in combination t
 
 Ansible >= 2.9
 
-Infrastructure:
+Infrastructure:  
+  
 | Resource           | Recommended Images | PostgreSQL |
 | ------------------ | ------------------ | ---------- |
 | Database Master VM | RockyLinux 9       | required   |
