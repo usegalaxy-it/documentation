@@ -133,8 +133,22 @@ It is possoble, and needed for example to use Hashicorp Terraform for cloud depl
 
 ## Terraform hints
 
-Due to the 
+To use Hashicorp Terraform with ReCaS cloud, it is needed to follow the section [for retrieving KeyStone access token](## Get a Keystone Access token). Moreover you need to assign the KeyStone token to the variable ``OS_AUTH_TOKEN`` which is the one used by terraform:
 
    ```
    export OS_AUTH_TOKEN=<keyston token from id field>
    ```
+Finally, due to the configuration of ReCaS Cloud endpoints and a bug in the terraform library to interact with openstack, it is needed to add to the providers.tf file the following endpoint map:
+
+```
+# Configure the OpenStack Provider
+provider "openstack" {
+  tenant_id = "<openstack tenant id>"
+  auth_url = "https://keystone.recas.ba.infn.it/v3"
+  endpoint_overrides = {
+    "network"  = "https://neutron.recas.ba.infn.it/v2.0/"
+    "volumev3" = "https://cinder.recas.ba.infn.it/v3/"
+    "image" = "https://glance.recas.ba.infn.it/v2/"
+  }
+}
+```
