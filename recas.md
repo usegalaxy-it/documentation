@@ -121,7 +121,7 @@ It is possoble, and needed for example to use Hashicorp Terraform for cloud depl
 5. Assign the keystone token, which is the ``id`` field from the output of the previous command to the environment variable ``OS_TOKEN``:
 
    ```
-   export OS_TOKEN=<keyston token from id field>
+   export OS_TOKEN=<keystone token from id field>
    ``` 
 6. Test the access:
 
@@ -136,7 +136,7 @@ It is possoble, and needed for example to use Hashicorp Terraform for cloud depl
 To use Hashicorp Terraform with ReCaS cloud, it is needed to follow the section [for retrieving KeyStone access token](## Get a Keystone Access token). Moreover you need to assign the KeyStone token to the variable ``OS_AUTH_TOKEN`` which is the one used by terraform:
 
    ```
-   export OS_AUTH_TOKEN=<keyston token from id field>
+   export OS_AUTH_TOKEN=<keystone token from id field>
    ```
 Finally, due to the configuration of ReCaS Cloud endpoints and a bug in the terraform library to interact with openstack, it is needed to add to the providers.tf file the following endpoint map:
 
