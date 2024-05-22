@@ -21,10 +21,9 @@ python3 -m venv venv
 pip install openstackclient
 ```
 
-
 ## Access with IAM Token
 
-IAM is the Identity provider (IdP) used by ReCaS Cloud. We will use oidc-agent to interact with IAM
+IAM is the Identity provider (IdP) used by ReCaS Cloud. We will use oidc-agent to interact with IAM.
 
 ### Install oidc-agent
 
@@ -34,12 +33,108 @@ We recommend to use the "device" flow for creating the a new IAM client with oid
 
 In the following the short name of the client created with oidc-gen will be ``iam-recas``.
 
-### Load the client
+### Get IAM token and access to cloud resources
 
-### Load Openstack environment variables
+1. Run oidc-agent:
 
-### Check with openstack client
+   ```
+   eval `oidc-agent-service use`
+   oidc-add iam-recas
+   ```
+2. Create OpenStack tenant rc file with your favourite editor, ``vim yourtenant.sh``, with the following parameters:
+
+   ```
+   #!/usr/bin/env bash
+   export OS_AUTH_URL=https://keystone.recas.ba.infn.it/v3
+   export OS_AUTH_TYPE=v3oidcaccesstoken
+   export OS_PROJECT_ID=<openstack tenant id>
+   export OS_TENANT_ID=<openstack tenant id>
+   export OS_PROTOCOL="openid"
+   export OS_IDENTITY_PROVIDER="recas-bari"
+   export OS_IDENTITY_API_VERSION=3
+   export OS_REGION_NAME="RegionOne"
+   export OS_INTERFACE=public
+   export OIDC_AGENT_ACCOUNT=iam-recas
+   export OS_ACCESS_TOKEN=$(oidc-token ${OIDC_AGENT_ACCOUNT})
+   export OS_AUTH_TOKEN=$OS_ACCESS_TOKEN
+   ```
+
+3. Source the rc file:
+
+   ```
+   . yourtenant.sh
+   ```
+
+4. Test the access:
+
+   ``
+   openstack image list
+   ```
+
+    and you should be able to see openstack images available on your tenant.
 
 ## Get a Keystone Access token 
 
+It is possoble, and needed for example to use Hashicorp Terraform for cloud deployment, to retrieve a Keystone token.
+
+1. Run oidc-agent and get a IAM token:
+
+   ```
+   eval `oidc-agent-service use`
+   oidc-add iam-recas
+   oidc-token iam-recas
+   ```
+
+   Then assign the token you retrieved from oidc-token command to a variable:
+
+   ```
+   export IAM_ACCESS_TOKEN=<token from oidc-token command>
+   ```
+
+2. Create OpenStack tenant rc file with your favourite editor, ``vim yourtenant.sh``, with the following parameters:
+
+   ```
+   #!/usr/bin/env bash
+   export OS_AUTH_URL=https://keystone.recas.ba.infn.it/v3
+   export OS_AUTH_TYPE=token
+   export OS_PROJECT_ID=<openstack tenant id>
+   export OS_TENANT_ID=<openstack tenant id>
+   export OS_PROTOCOL="openid"
+   export OS_IDENTITY_PROVIDER="recas-bari"
+   export OS_IDENTITY_API_VERSION=3
+   export OS_REGION_NAME="RegionOne"
+   export OS_INTERFACE=public
+   ```
+
+3. Source the rc file:
+
+   ```
+   . yourtenant.sh
+   ```
+
+4. Get a keystone token
+
+   ```
+   openstack --os-auth-type v3oidcaccesstoken --os-access-token ${IAM_ACCESS_TOKEN} --os-auth-url https://keystone.recas.ba.infn.it/v3 --os-protocol openid --os-identity-provider recas-bari --os-identity-api-version 3 --os-project-id <your tenant id> token issue
+   ```
+
+5. Assign the keystone token, which is the ``id`` field from the output of the previous command to the environment variable ``OS_TOKEN``:
+
+   ```
+   export OS_TOKEN=<keyston token from id field>
+   ``` 
+6. Test the access:
+
+   ``
+   openstack image list
+   ```
+
+    and you should be able to see openstack images available on your tenant.
+
 ## Terraform hints
+
+Due to the 
+
+   ```
+   export OS_AUTH_TOKEN=<keyston token from id field>
+   ```
