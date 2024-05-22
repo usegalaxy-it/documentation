@@ -133,7 +133,7 @@ It is possoble, and needed for example to use Hashicorp Terraform for cloud depl
 
 ## Terraform hints
 
-To use Hashicorp Terraform with ReCaS cloud, it is needed to follow the section [for retrieving KeyStone access token](##get-a-keystone-access-token). Moreover you need to assign the KeyStone token to the variable ``OS_AUTH_TOKEN`` which is the one used by terraform:
+To use Hashicorp Terraform with ReCaS cloud, it is needed to follow the section [for retrieving KeyStone access token](#get-a-keystone-access-token). Moreover you need to assign the KeyStone token to the variable ``OS_AUTH_TOKEN`` which is the one used by terraform:
 
    ```
    export OS_AUTH_TOKEN=<keystone token from id field>
