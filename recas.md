@@ -67,7 +67,7 @@ In the following the short name of the client created with oidc-gen will be ``ia
 
 4. Test the access:
 
-   ``
+   ```
    openstack image list
    ```
 
@@ -125,7 +125,7 @@ It is possoble, and needed for example to use Hashicorp Terraform for cloud depl
    ``` 
 6. Test the access:
 
-   ``
+   ```
    openstack image list
    ```
 
